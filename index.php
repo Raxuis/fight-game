@@ -5,12 +5,12 @@ if (!empty($_GET)) {
         {
             private $life;
             private $name;
-            private $damage;
+            private $hits;
 
             public function hit($warrior)
             {
                 $warrior->life -= rand(40, 60);
-                $warrior->damage += 1;
+                $warrior->hits += 1;
             }
             private function hydrate(array $warriorInfos)
             {
@@ -28,9 +28,9 @@ if (!empty($_GET)) {
             {
                 $this->life = $data;
             }
-            public function setDamage($data)
+            public function setHits($data)
             {
-                $this->damage = $data;
+                $this->hits = $data;
             }
             public function setName($data)
             {
@@ -44,9 +44,9 @@ if (!empty($_GET)) {
             {
                 return $this->life;
             }
-            public function getDamage()
+            public function getHits()
             {
-                return $this->damage;
+                return $this->hits;
             }
             public function __construct($warriorInfos = array())
             {
@@ -60,12 +60,12 @@ if (!empty($_GET)) {
         $warriorsInfos1 = [
             'life' => rand(100, 200),
             'name' => $_GET['name_1'],
-            'damage' => 0
+            'hits' => 0
         ];
         $warriorsInfos2 = [
             'life' => rand(100, 200),
             'name' => $_GET['name_2'],
-            'damage' => 0
+            'hits' => 0
         ];
 
         function hitText($warrior1, $warrior2)
@@ -74,7 +74,7 @@ if (!empty($_GET)) {
         }
         function deathText($warrior)
         {
-            echo '<p>' . ucfirst($warrior->getName()) . ' is dead in ' . $warrior->getDamage() . ' damages.💀' . '</p>';
+            echo '<p>' . ucfirst($warrior->getName()) . ' is dead in ' . $warrior->getHits() . ' hits.💀' . '</p>';
             echo '<a href="index.php" class="text-blue-500 hover:text-blue-300">Go back</a>';
         }
 
