@@ -38,8 +38,8 @@ Fight game with HTML / PHP / Tailwind CSS
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
+- HTML / CSS
+- [Tailwind CSS](https://tailwindcss.com/)
 - [PHP](https://www.php.net/)
 
 ## :white_check_mark: Requirements
