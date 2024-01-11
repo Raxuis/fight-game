@@ -113,6 +113,7 @@ if (!empty($_GET)) {
     <link rel="stylesheet" href="style.css" />
     <title>Raphaël | Fight Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
 </head>
 
 <body>
