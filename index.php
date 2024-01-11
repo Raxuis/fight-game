@@ -23,6 +23,7 @@ if (!empty($_GET)) {
                     }
                 }
             }
+
             public function setLife($data)
             {
                 $this->life = $data;
@@ -66,23 +67,30 @@ if (!empty($_GET)) {
             'name' => $_GET['name_2'],
             'damage' => 0
         ];
+
+        function hitText($warrior1, $warrior2)
+        {
+            echo '<p>' . ucfirst($warrior1->getName()) . ' hit ' . ucfirst($warrior2->getName()) . ' (' . ($warrior2->getLife() > 0 ? $warrior2->getLife() : 0) . ' hp) 🤜' . '</p>';
+        }
+        function deathText($warrior)
+        {
+            echo '<p>' . ucfirst($warrior->getName()) . ' is dead in ' . $warrior->getDamage() . ' damages.💀' . '</p>';
+            echo '<a href="index.php" class="text-blue-500 hover:text-blue-300">Go back</a>';
+        }
+
         $warrior1 = new Warrior($warriorsInfos1);
         $warrior2 = new Warrior($warriorsInfos2);
         while ($warrior1->getLife() > 0 && $warrior2->getLife() > 0) {
             $warrior1->hit($warrior2);
-            echo '<p>' . ucfirst($warrior1->getName()) . ' hit ' . ucfirst($warrior2->getName()) . ' (' . ($warrior2->getLife() > 0 ? $warrior2->getLife() : 0) . ' hp) 🤜' . '</p>';
+            hitText($warrior1, $warrior2);
             if ($warrior2->getLife() <= 0) {
-                echo '<p>' . ucfirst($warrior2->getName()) . ' is dead in ' . $warrior2->getDamage() . ' damages.💀' . '</p>';
-                echo '<a href="index.php" class="text-blue-500 hover:text-blue-300">Go back</a>';
+                deathText($warrior2);
                 break;
             }
-
-
             $warrior2->hit($warrior1);
-            echo '<p>' . ucfirst($warrior2->getName()) . ' hit ' . ucfirst($warrior1->getName()) . ' (' . ($warrior1->getLife() > 0 ? $warrior1->getLife() : 0) . ' hp) 🤜' . '</p>';
+            hitText($warrior2, $warrior1);
             if ($warrior1->getLife() <= 0) {
-                echo '<p>' . ucfirst($warrior1->getName()) . ' is dead in ' . $warrior1->getDamage() . ' damages.💀' . '</p>';
-                echo '<a href="index.php" class="text-blue-500 hover:text-blue-300">Go back</a>';
+                deathText($warrior1);
                 break;
             }
 
