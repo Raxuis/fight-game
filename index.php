@@ -1,88 +1,100 @@
 <?php
-class Warrior
-{
-    private $life;
-    private $name;
-    private $damage;
+if (!empty($_GET)) {
+    if (!empty($_GET['name_1']) && !empty($_GET['name_2'])) {
+        class Warrior
+        {
+            private $life;
+            private $name;
+            private $damage;
 
-    public function hit($warrior)
-    {
-        $warrior->life -= rand(40, 60);
-        $warrior->damage += 1;
-    }
-    private function hydrate(array $warriorInfos)
-    {
-        if (is_array($warriorInfos) && count($warriorInfos)) {
-            foreach ($warriorInfos as $key => $value) {
-                $method = 'set' . ucfirst($key);
-                if (method_exists($this, $method)) {
-                    $this->$method($value);
+            public function hit($warrior)
+            {
+                $warrior->life -= rand(40, 60);
+                $warrior->damage += 1;
+            }
+            private function hydrate(array $warriorInfos)
+            {
+                if (is_array($warriorInfos) && count($warriorInfos)) {
+                    foreach ($warriorInfos as $key => $value) {
+                        $method = 'set' . ucfirst($key);
+                        if (method_exists($this, $method)) {
+                            $this->$method($value);
+                        }
+                    }
                 }
             }
+            public function setLife($data)
+            {
+                $this->life = $data;
+            }
+            public function setDamage($data)
+            {
+                $this->damage = $data;
+            }
+            public function setName($data)
+            {
+                $this->name = $data;
+            }
+            public function getName()
+            {
+                return $this->name;
+            }
+            public function getLife()
+            {
+                return $this->life;
+            }
+            public function getDamage()
+            {
+                return $this->damage;
+            }
+            public function __construct($warriorInfos = array())
+            {
+                $this->hydrate($warriorInfos);
+            }
+            public function __destruct()
+            {
+            }
         }
-    }
-    public function setLife($data)
-    {
-        $this->life = $data;
-    }
-    public function setDamage($data)
-    {
-        $this->damage = $data;
-    }
-    public function setName($data)
-    {
-        $this->name = $data;
-    }
-    public function getName()
-    {
-        return $this->name;
-    }
-    public function getLife()
-    {
-        return $this->life;
-    }
-    public function getDamage()
-    {
-        return $this->damage;
-    }
-    public function __construct($warriorInfos = array())
-    {
-        $this->hydrate($warriorInfos);
-    }
-    public function __destruct()
-    {
+
+        $warriorsInfos1 = [
+            'life' => rand(100, 200),
+            'name' => $_GET['name_1'],
+            'damage' => 0
+        ];
+        $warriorsInfos2 = [
+            'life' => rand(100, 200),
+            'name' => $_GET['name_2'],
+            'damage' => 0
+        ];
+        $warrior1 = new Warrior($warriorsInfos1);
+        $warrior2 = new Warrior($warriorsInfos2);
+        while ($warrior1->getLife() > 0 && $warrior2->getLife() > 0) {
+            $warrior1->hit($warrior2);
+            echo '<p>' . ucfirst($warrior1->getName()) . ' hit ' . ucfirst($warrior2->getName()) . ' (' . ($warrior2->getLife() > 0 ? $warrior2->getLife() : 0) . ' hp) 🤜' . '</p>';
+            if ($warrior2->getLife() <= 0) {
+                echo '<p>' . ucfirst($warrior2->getName()) . ' is dead in ' . $warrior2->getDamage() . ' damages.💀' . '</p>';
+                echo '<a href="index.php" class="text-blue-500 hover:text-blue-300">Go back</a>';
+                break;
+            }
+
+
+            $warrior2->hit($warrior1);
+            echo '<p>' . ucfirst($warrior2->getName()) . ' hit ' . ucfirst($warrior1->getName()) . ' (' . ($warrior1->getLife() > 0 ? $warrior1->getLife() : 0) . ' hp) 🤜' . '</p>';
+            if ($warrior1->getLife() <= 0) {
+                echo '<p>' . ucfirst($warrior1->getName()) . ' is dead in ' . $warrior1->getDamage() . ' damages.💀' . '</p>';
+                echo '<a href="index.php" class="text-blue-500 hover:text-blue-300">Go back</a>';
+                break;
+            }
+
+        }
+
+    } else {
+        header('location: index.php');
+        exit();
     }
 }
 
-$warriorsInfos1 = [
-    'life' => rand(100, 200),
-    'name' => 'Kobe',
-    'damage' => 0
-];
-$warriorsInfos2 = [
-    'life' => rand(100, 200),
-    'name' => 'MJ',
-    'damage' => 0
-];
-$warrior1 = new Warrior($warriorsInfos1);
-$warrior2 = new Warrior($warriorsInfos2);
-while ($warrior1->getLife() > 0 && $warrior2->getLife() > 0) {
-    $warrior1->hit($warrior2);
-    if ($warrior2->getLife() <= 0) {
-        echo '<p>' . $warrior2->getName() . ' is dead in ' . $warrior2->getDamage() . ' damages.💀' . '</p>';
-        unset($warrior2);
-        break;
-    }
-    echo '<p>' . $warrior1->getName() . ' hit ' . $warrior2->getName() . ' (' . $warrior2->getLife() . ' hp) 🤜' . '</p>';
-    $warrior2->hit($warrior1);
-    if ($warrior1->getLife() <= 0) {
-        echo '<p>' . $warrior1->getName() . ' is dead in ' . $warrior1->getDamage() . ' damages.💀' . '</p>';
-        unset($warrior1);
-        break;
-
-    }
-    echo '<p>' . $warrior2->getName() . ' hit ' . $warrior1->getName() . ' (' . $warrior1->getLife() . ' hp) 🤜' . '</p>';
-} ?>
+?>
 <!doctype html>
 <html lang="en">
 
@@ -92,15 +104,35 @@ while ($warrior1->getLife() > 0 && $warrior2->getLife() > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>Raphaël | Fight Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
     <main>
-        <div className="pt-6">
-            <h1 className="text-center text-3xl font-bold">
-                Fight Game made by <a href="https://github.com/Raxuis" target="_blank" rel="noopener noreferrer">
-                    Raphaël | Raxuis 👋
-                </a>
-            </h1>
-        </div>
-    </main>
+        <?php if (!isset($_GET['name_1']) || !isset($_GET['name_2'])) { ?>
+            <div class="flex items-center flex-col p-10">
+                <h1 class="text-3xl font-bold ">
+                    Fight Game made by <a href="https://github.com/Raxuis" target="_blank" rel="noopener noreferrer"
+                        class="text-blue-500 hover:text-blue-300">
+                        Raphaël | Raxuis 👋
+                    </a>
+                </h1>
+                <form action="" method="get" class="flex items-center flex-col gap-3">
+                    <div class="pt-3">
+                        <label class="block text-white text-sm font-bold mb-2" htmlFor="name">
+                            Player 1 name:
+                        </label>
+                        <input id="name" type="text" name="name_1"
+                            class="block w-full px-3 py-2 mt-1 text-base text-white-900 bg-white border border-gray-300 rounded-md dark:bg-gray-700" />
+                    </div>
+                    <div class="pt-3">
+                        <label class="block text-white text-sm font-bold mb-2" htmlFor="name">
+                            Player 2 name:
+                        </label>
+                        <input id="name" type="text" name="name_2"
+                            class="block w-full px-3 py-2 mt-1 text-base text-white-900 bg-white border border-gray-300 rounded-md dark:bg-gray-700" />
+                    </div>
+                    <button type="submit"
+                        class="block w-full px-3 py-2 mt-4 text-base font-medium text-white bg-blue-700 rounded-md border border-blue-700  hover:bg-blue-800  focus:ring">Valider</button>
+        </main>
+    <?php } ?>

@@ -29,3 +29,11 @@ a:hover {
     transition: 0.5s;
     letter-spacing: 2px;
 }
+
+button {
+    transition: 0.5s;
+}
+
+button:hover {
+    transition: 0.5s;
+}
